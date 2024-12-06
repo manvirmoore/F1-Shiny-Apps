@@ -1,0 +1,25 @@
+#library(shiny)
+#library(bslib)
+#library(ggplot2)
+library(tidyverse)
+
+#get the data
+
+laps <- readr::read_csv("lap_times.csv") %>% 
+  select("raceId", "driverId", "lap", "position")
+drivers <- readr::read_csv("drivers.csv") %>% 
+  select("driverId", "driverRef", "code")
+races <- readr::read_csv("races.csv") %>% 
+  select("raceId", "year", "round", "name")
+#teams <- readr::read_csv("constructors.csv")
+
+#Joins
+positions <- laps %>% 
+  dplyr::left_join(y = races, by = "raceId") %>% 
+  dplyr::left_join(y = drivers, by = "driverId") %>% 
+  dplyr::filter(year == 2024) %>% 
+  dplyr::select("round", "GP_name" = "name", "lap", "dcode" = "code", "driverRef", "position")
+
+dplyr::distinct(positions,GP_name)
+
+dplyr::filter(.data = positions, GP_name == "Bahrain Grand Prix")
